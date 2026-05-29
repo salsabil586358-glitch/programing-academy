@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🤖 أكاديمية البرمجة الشاملة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink-light:#fce4ec;--pink-main:#f8bbd0;--pink-mid:#f48fb1;
+    --pink-dark:#e91e8c;--yellow-light:#fffde7;--yellow-bright:#ffeb3b;
+    --yellow-gold:#ffc107;--text-dark:#4a1942;--text-mid:#7b3f72;
+    --shadow:rgba(233,30,140,0.15);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Cairo',sans-serif;background:linear-gradient(135deg,#fce4ec 0%,#fdf3f9 40%,#fffde7 100%);min-height:100vh;color:var(--text-dark);overflow-x:hidden;}
+  .bg-bubbles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+  .bubble{position:absolute;border-radius:50%;animation:floatUp linear infinite;opacity:0.22;}
+  @keyframes floatUp{0%{transform:translateY(110vh) scale(0.8);opacity:0}10%{opacity:0.28}90%{opacity:0.18}100%{transform:translateY(-20vh) scale(1.2);opacity:0}}
+  nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.88);backdrop-filter:blur(16px);border-bottom:2px solid var(--pink-main);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 20px var(--shadow);}
+  .nav-logo{font-family:'Tajawal',sans-serif;font-size:18px;font-weight:900;background:linear-gradient(135deg,var(--pink-dark),var(--yellow-gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .nav-score{background:linear-gradient(135deg,var(--yellow-bright),var(--yellow-gold));border-radius:20px;padding:5px 12px;font-weight:700;font-size:13px;color:var(--text-dark);box-shadow:0 2px 8px rgba(255,193,7,0.4);}
+  .hero{position:relative;z-index:1;text-align:center;padding:28px 16px 18px;}
+  .robot-icon{font-size:58px;display:block;animation:bounce 2s ease-in-out infinite;filter:drop-shadow(0 10px 30px rgba(233,30,140,0.3));}
+  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  .hero h1{font-family:'Tajawal',sans-serif;font-size:clamp(20px,5vw,34px);font-weight:900;margin:10px 0 6px;background:linear-gradient(135deg,var(--pink-dark),#c2185b,var(--yellow-gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .hero p{color:var(--text-mid);font-size:14px;max-width:460px;margin:0 auto;}
+  .progress-wrap{margin:14px auto;max-width:380px;background:var(--pink-main);border-radius:20px;height:12px;overflow:hidden;box-shadow:inset 0 2px 6px rgba(0,0,0,0.08);}
+  .progress-bar{height:100%;background:linear-gradient(90deg,var(--yellow-bright),var(--yellow-gold),var(--pink-dark));border-radius:20px;transition:width 0.6s ease;}
+  .progress-label{text-align:center;font-size:12px;color:var(--text-mid);margin-top:4px;font-weight:600;}
+  .tabs-wrap{position:relative;z-index:1;overflow-x:auto;padding:0 12px 14px;scrollbar-width:none;}
+  .tabs-wrap::-webkit-scrollbar{display:none;}
+  .tabs{display:flex;gap:7px;width:max-content;}
+  .tab-btn{padding:8px 16px;border-radius:22px;border:2px solid var(--pink-mid);background:white;color:var(--text-mid);font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.3s;white-space:nowrap;}
+  .tab-btn.active,.tab-btn:hover{background:linear-gradient(135deg,var(--pink-dark),#c2185b);color:white;border-color:var(--pink-dark);transform:translateY(-2px);box-shadow:0 5px 18px rgba(233,30,140,0.35);}
+  .content{position:relative;z-index:1;padding:0 13px 60px;max-width:720px;margin:0 auto;}
+  .section{display:none;}.section.active{display:block;}
+  .card{background:white;border-radius:22px;padding:20px;margin-bottom:16px;box-shadow:0 8px 32px var(--shadow),0 2px 8px rgba(0,0,0,0.04);border:2px solid var(--pink-light);transition:transform 0.3s,box-shadow 0.3s;animation:fadeIn 0.5s ease forwards;}
+  .card:hover{transform:translateY(-3px);box-shadow:0 14px 44px var(--shadow);}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  .card-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+  .card-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:23px;background:linear-gradient(135deg,var(--pink-light),var(--yellow-light));box-shadow:0 4px 12px var(--shadow);flex-shrink:0;}
+  .card-title{font-size:17px;font-weight:900;color:var(--text-dark);}
+  .card-subtitle{font-size:12px;color:var(--text-mid);margin-top:2px;}
+  .card p{color:var(--text-mid);line-height:1.9;font-size:14px;}.card p+p{margin-top:8px;}
+  .highlight-box{background:linear-gradient(135deg,var(--pink-light),var(--yellow-light));border-right:4px solid var(--pink-dark);border-radius:12px;padding:12px 14px;margin:12px 0;font-size:13px;color:var(--text-dark);line-height:1.8;}
+  .highlight-box strong{color:var(--pink-dark);}
+  .tip-box{background:linear-gradient(135deg,var(--yellow-light),#fff8e1);border-right:4px solid var(--yellow-gold);border-radius:12px;padding:12px 14px;margin:12px 0;display:flex;gap:10px;align-items:flex-start;}
+  .tip-box .tip-icon{font-size:18px;flex-shrink:0;}.tip-box .tip-text{font-size:13px;color:var(--text-dark);line-height:1.8;}
+  .code-block{background:#2d1b35;color:#f8bbd0;border-radius:14px;padding:14px;padding-top:28px;margin:12px 0;font-family:'Courier New',monospace;font-size:12px;line-height:1.8;direction:ltr;text-align:left;box-shadow:inset 0 2px 12px rgba(0,0,0,0.3);overflow-x:auto;position:relative;}
+  .code-block .kw{color:var(--yellow-bright);font-weight:bold;}.code-block .str{color:#a5d6a7;}.code-block .cm{color:#9e9e9e;font-style:italic;}.code-block .fn{color:#f48fb1;}.code-block .num{color:var(--yellow-gold);}
+  .code-label{position:absolute;top:8px;left:10px;font-size:11px;color:#9e9e9e;font-family:'Cairo',sans-serif;}
+  .diagram{background:linear-gradient(135deg,#fff3f8,#fffde7);border-radius:14px;padding:16px;margin:12px 0;border:2px dashed var(--pink-mid);text-align:center;}
+  .diagram-row{display:flex;align-items:center;justify-content:center;gap:8px;margin:8px 0;flex-wrap:wrap;}
+  .diagram-box{background:white;border-radius:10px;padding:8px 13px;border:2px solid var(--pink-mid);font-size:12px;font-weight:700;color:var(--text-dark);box-shadow:0 3px 10px var(--shadow);min-width:68px;text-align:center;}
+  .diagram-box.yellow{background:var(--yellow-light);border-color:var(--yellow-gold);}
+  .diagram-box.pink{background:var(--pink-light);border-color:var(--pink-dark);color:var(--pink-dark);}
+  .diagram-box.green{background:#e8f5e9;border-color:#4caf50;color:#2e7d32;}
+  .diagram-box.blue{background:#e3f2fd;border-color:#2196f3;color:#1565c0;}
+  .diagram-arrow{font-size:18px;color:var(--pink-dark);}
+  .step-list{list-style:none;margin:12px 0;}
+  .step-list li{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px dashed var(--pink-light);}
+  .step-list li:last-child{border-bottom:none;}
+  .step-num{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--pink-dark),#c2185b);color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;flex-shrink:0;}
+  .step-txt{font-size:13px;color:var(--text-mid);line-height:1.8;padding-top:3px;}.step-txt strong{color:var(--text-dark);}
+  .badge{display:inline-block;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;margin:2px;}
+  .badge-pink{background:var(--pink-light);color:var(--pink-dark);border:1px solid var(--pink-mid);}
+  .badge-yellow{background:var(--yellow-light);color:#e65100;border:1px solid var(--yellow-gold);}
+  .badge-green{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;}
+  .compare-table{width:100%;border-collapse:separate;border-spacing:0 6px;}
+  .compare-table th{background:linear-gradient(135deg,var(--pink-dark),#c2185b);color:white;padding:10px;font-size:13px;text-align:center;}
+  .compare-table th:first-child{border-radius:10px 0 0 10px;}.compare-table th:last-child{border-radius:0 10px 10px 0;}
+  .compare-table td{background:white;padding:10px;text-align:center;font-size:12px;color:var(--text-mid);border:1px solid var(--pink-light);}
+  .compare-table td:first-child{border-radius:10px 0 0 10px;font-weight:700;color:var(--text-dark);background:var(--pink-light);}.compare-table td:last-child{border-radius:0 10px 10px 0;}
+  .compare-table tr:hover td{background:var(--yellow-light);}
+  .lesson-nav{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:14px;}
+  .lesson-btn{padding:7px 12px;border-radius:17px;border:2px solid var(--pink-light);background:white;cursor:pointer;font-size:12px;font-family:'Cairo',sans-serif;font-weight:700;color:var(--text-mid);transition:all 0.2s;}
+  .lesson-btn.active{background:linear-gradient(135deg,var(--pink-dark),#c2185b);color:white;border-color:transparent;box-shadow:0 4px 12px rgba(233,30,140,0.3);}
+  .lesson-btn.done{background:var(--yellow-light);border-color:var(--yellow-gold);color:#e65100;}
+  .quiz-card{background:white;border-radius:22px;padding:20px;box-shadow:0 8px 32px var(--shadow);border:2px solid var(--pink-light);margin-bottom:16px;}
+  .quiz-q-num{font-size:11px;font-weight:700;color:var(--pink-dark);margin-bottom:6px;}
+  .quiz-question{font-size:16px;font-weight:700;color:var(--text-dark);margin-bottom:14px;line-height:1.7;}
+  .quiz-options{display:flex;flex-direction:column;gap:8px;}
+  .quiz-option{padding:12px 15px;border-radius:12px;border:2px solid var(--pink-light);background:white;cursor:pointer;font-size:14px;font-family:'Cairo',sans-serif;color:var(--text-dark);transition:all 0.25s;text-align:right;font-weight:600;display:flex;align-items:center;gap:10px;}
+  .quiz-option:hover:not(.selected){border-color:var(--pink-mid);background:var(--pink-light);transform:translateX(-3px);}
+  .quiz-option.correct{background:#e8f5e9;border-color:#4caf50;color:#1b5e20;}
+  .quiz-option.wrong{background:#ffebee;border-color:#f44336;color:#b71c1c;}
+  .quiz-option.selected{pointer-events:none;}
+  .option-dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--pink-mid);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+  .feedback{margin-top:11px;padding:10px 13px;border-radius:10px;font-size:13px;font-weight:600;display:none;line-height:1.7;}
+  .feedback.show{display:block;animation:fadeIn 0.3s ease;}
+  .feedback.ok{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;}
+  .feedback.no{background:#ffebee;color:#c62828;border:1px solid #ef9a9a;}
+  .quiz-nav{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap;}
+  .btn{padding:10px 22px;border-radius:22px;border:none;font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.3s;}
+  .btn-primary{background:linear-gradient(135deg,var(--pink-dark),#c2185b);color:white;box-shadow:0 4px 16px rgba(233,30,140,0.4);}
+  .btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(233,30,140,0.5);}
+  .btn-secondary{background:var(--yellow-bright);color:var(--text-dark);box-shadow:0 4px 12px rgba(255,235,59,0.4);border:2px solid var(--yellow-gold);}
+  .btn-secondary:hover{transform:translateY(-3px);}
+  .btn-sm{padding:8px 17px;font-size:13px;}
+  .result-card{text-align:center;padding:34px 20px;background:linear-gradient(135deg,white,var(--pink-light));border-radius:22px;border:2px solid var(--pink-mid);box-shadow:0 8px 32px var(--shadow);}
+  .result-emoji{font-size:62px;animation:bounce 1s ease infinite;display:block;}
+  .result-score{font-size:46px;font-weight:900;background:linear-gradient(135deg,var(--pink-dark),var(--yellow-gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .result-msg{font-size:17px;color:var(--text-mid);margin:8px 0 16px;font-weight:600;}
+  .stars{font-size:28px;margin:8px 0;}
+  .glossary-item{display:flex;align-items:flex-start;gap:12px;padding:13px;border-radius:13px;margin-bottom:9px;background:white;border:2px solid var(--pink-light);transition:all 0.3s;}
+  .glossary-item:hover{border-color:var(--pink-mid);background:var(--pink-light);}
+  .glossary-icon{font-size:24px;flex-shrink:0;}
+  .glossary-term{font-size:14px;font-weight:900;color:var(--text-dark);}
+  .glossary-def{font-size:13px;color:var(--text-mid);margin-top:3px;line-height:1.7;}
+  .roadmap{position:relative;padding-right:26px;}
+  .roadmap::before{content:'';position:absolute;right:11px;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--pink-dark),var(--yellow-gold));border-radius:3px;}
+  .roadmap-item{position:relative;margin-bottom:18px;}
+  .roadmap-dot{position:absolute;right:-31px;top:8px;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--pink-dark),#c2185b);border:3px solid white;box-shadow:0 2px 8px var(--shadow);z-index:1;display:flex;align-items:center;justify-content:center;font-size:10px;color:white;font-weight:900;}
+  .roadmap-content{background:white;border-radius:14px;padding:14px;border:2px solid var(--pink-light);box-shadow:0 4px 14px var(--shadow);}
+  .roadmap-title{font-size:15px;font-weight:900;color:var(--text-dark);margin-bottom:5px;}
+  .roadmap-desc{font-size:13px;color:var(--text-mid);line-height:1.7;}
+  .roadmap-tags{margin-top:8px;}
+  .git-cmd{background:#1a0a24;border-radius:10px;padding:9px 13px;margin:7px 0;font-family:'Courier New',monospace;font-size:12px;color:#f8bbd0;direction:ltr;text-align:left;border-right:3px solid var(--pink-dark);}
+  .git-cmd .git-kw{color:var(--yellow-bright);font-weight:bold;}
+  .git-cmd .git-cm{color:#888;font-style:italic;}
+  .confetti-piece{position:fixed;pointer-events:none;z-index:999;animation:confettiFall 2s ease forwards;}
+  @keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+</style>
+</head>
+<body>
+<div class="bg-bubbles" id="bubbles"></div>
+
+<nav>
+  <div class="nav-logo">🤖 أكاديمية البرمجة</div>
+  <div class="nav-score" id="scoreDisplay">⭐ 0 نقطة</div>
+</nav>
+
+<div class="hero">
+  <span class="robot-icon">🤖</span>
+  <h1>تعلّم البرمجة من الصفر 🚀</h1>
+  <p>من أساسيات البرمجة إلى GitHub وبناء تطبيقك الأول!</p>
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+  <div class="progress-label" id="progressLabel">ابدئي رحلتك الآن! 🌟</div>
+</div>
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showSection('lessons',this)">📚 البرمجة</button>
+    <button class="tab-btn" onclick="showSection('github',this)">🐙 GitHub</button>
+    <button class="tab-btn" onclick="showSection('appbuild',this)">📱 بناء تطبيق</button>
+    <button class="tab-btn" onclick="showSection('roadmap',this)">🗺️ خارطة الطريق</button>
+    <button class="tab-btn" onclick="showSection('quiz',this)">🧠 اختبار</button>
+    <button class="tab-btn" onclick="showSection('compare',this)">⚖️ مقارنة</button>
+    <button class="tab-btn" onclick="showSection('glossary',this)">📖 قاموس</button>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ===== LESSONS ===== -->
+<div class="section active" id="lessons">
+  <div class="lesson-nav" id="lessonNav"></div>
+  <div id="lessonContent"></div>
+</div>
+
+<!-- ===== GITHUB ===== -->
+<div class="section" id="github">
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">🐙</div><div><div class="card-title">ما هو GitHub؟</div><div class="card-subtitle">مستودع الكود الأشهر في العالم</div></div></div>
+    <p>GitHub هو موقع يشبه <strong style="color:var(--pink-dark)">Google Drive ولكن للكود</strong>! تحفظين فيه مشاريعك، وتتعاونين مع الآخرين، وتتتبّعين كل تغيير.</p>
+    <div class="diagram">
+      <p style="font-weight:900;font-size:13px;color:var(--text-dark);margin-bottom:10px;">🌍 GitHub = شبكة اجتماعية للمطوّرين</p>
+      <div class="diagram-row">
+        <div class="diagram-box pink">جهازك 💻<br><small>Local</small></div>
+        <div class="diagram-arrow">⬆️⬇️</div>
+        <div class="diagram-box yellow">GitHub ☁️<br><small>السحابة</small></div>
+        <div class="diagram-arrow">⬆️⬇️</div>
+        <div class="diagram-box green">الفريق 👥<br><small>زملاؤك</small></div>
+      </div>
+    </div>
+    <div class="highlight-box"><strong>🔑 ثلاثة مفاهيم أساسية:</strong><br>
+      📦 <strong>Repository (ريبو):</strong> مجلد مشروعك على GitHub<br>
+      📸 <strong>Commit:</strong> حفظ نقطة تغيير (مثل نقطة حفظ في الألعاب!)<br>
+      🌿 <strong>Branch:</strong> نسخة موازية للمشروع تجرّبين فيها تعديلات بأمان
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">⚙️</div><div><div class="card-title">Git مقابل GitHub</div><div class="card-subtitle">ما الفرق بينهما؟</div></div></div>
+    <div class="diagram">
+      <div class="diagram-row">
+        <div class="diagram-box pink" style="min-width:130px;"><div style="font-size:16px;">🛠️</div><strong>Git</strong><br><small>برنامج على جهازك يتتبّع التغييرات</small></div>
+        <div style="font-size:24px;color:var(--pink-dark);margin:0 8px;">≠</div>
+        <div class="diagram-box yellow" style="min-width:130px;"><div style="font-size:16px;">🐙</div><strong>GitHub</strong><br><small>موقع يستضيف مشاريعك عبر الإنترنت</small></div>
+      </div>
+    </div>
+    <div class="tip-box"><div class="tip-icon">💡</div><div class="tip-text">Git هو الأداة، GitHub هو المنصة. مثل Microsoft Word (الأداة) وGoogle Drive (مكان الحفظ).</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">📋</div><div><div class="card-title">أوامر Git الأساسية</div><div class="card-subtitle">الأوامر التي ستستخدمينها يومياً</div></div></div>
+    <ul class="step-list">
+      <li><div class="step-num">1</div><div class="step-txt"><strong>تهيئة مشروع جديد</strong><br><div class="git-cmd"><span class="git-kw">git init</span> <span class="git-cm"># ابدئي تتبّع المشروع</span></div></div></li>
+      <li><div class="step-num">2</div><div class="step-txt"><strong>تحضير الملفات للحفظ</strong><br><div class="git-cmd"><span class="git-kw">git add</span> . <span class="git-cm"># أضيفي كل الملفات</span></div></div></li>
+      <li><div class="step-num">3</div><div class="step-txt"><strong>حفظ نقطة تغيير (Commit)</strong><br><div class="git-cmd"><span class="git-kw">git commit</span> -m <span style="color:#a5d6a7">"أضفت صفحة البداية"</span></div></div></li>
+      <li><div class="step-num">4</div><div class="step-txt"><strong>رفع الكود إلى GitHub</strong><br><div class="git-cmd"><span class="git-kw">git push</span> origin main <span class="git-cm"># ارفعي للسحابة</span></div></div></li>
+      <li><div class="step-num">5</div><div class="step-txt"><strong>تحميل آخر تحديثات الفريق</strong><br><div class="git-cmd"><span class="git-kw">git pull</span> <span class="git-cm"># حمّلي أحدث نسخة</span></div></div></li>
+      <li><div class="step-num">6</div><div class="step-txt"><strong>عرض حالة الملفات</strong><br><div class="git-cmd"><span class="git-kw">git status</span> <span class="git-cm"># شوفي ماذا تغيّر</span></div></div></li>
+      <li><div class="step-num">7</div><div class="step-txt"><strong>عرض سجل التغييرات</strong><br><div class="git-cmd"><span class="git-kw">git log</span> --oneline <span class="git-cm"># تاريخ كل commit</span></div></div></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">🌿</div><div><div class="card-title">Branches — فروع العمل</div><div class="card-subtitle">اعملي بأمان دون خراب الأصلي</div></div></div>
+    <div class="diagram">
+      <p style="font-weight:700;font-size:13px;margin-bottom:10px;">🌿 كيف تعمل الفروع؟</p>
+      <div class="diagram-row"><div class="diagram-box green">main ✅<br><small>المشروع الأصلي</small></div></div>
+      <div class="diagram-row"><div class="diagram-arrow" style="transform:rotate(90deg)">→</div></div>
+      <div class="diagram-row">
+        <div class="diagram-box pink">feature/تسجيل-دخول<br><small>تجربة آمنة 🧪</small></div>
+        <div class="diagram-box yellow">feature/تصميم-جديد<br><small>تجربة آمنة 🎨</small></div>
+      </div>
+    </div>
+    <div class="git-cmd"><span class="git-kw">git checkout</span> -b feature/ميزة-جديدة <span class="git-cm"># أنشئي فرع</span></div>
+    <div class="git-cmd"><span class="git-kw">git merge</span> feature/ميزة-جديدة <span class="git-cm"># ادمجي الفرع</span></div>
+    <div class="tip-box"><div class="tip-icon">💡</div><div class="tip-text">الفروع تُتيح تجريب أي فكرة دون الخوف من إفساد المشروع. جرّبي بحرية!</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">🔄</div><div><div class="card-title">Pull Request (PR)</div><div class="card-subtitle">مراجعة الكود قبل دمجه</div></div></div>
+    <p>حين تنهين فرعك، ترسلين <strong style="color:var(--pink-dark)">Pull Request</strong> لمراجعة الكود قبل إضافته للمشروع الرئيسي.</p>
+    <ul class="step-list">
+      <li><div class="step-num">1</div><div class="step-txt">انهي العمل على فرعك وارفعيه لـ GitHub</div></li>
+      <li><div class="step-num">2</div><div class="step-txt">افتحي Pull Request واشرحي ماذا فعلتِ</div></li>
+      <li><div class="step-num">3</div><div class="step-txt">الفريق يراجع ويضع تعليقات</div></li>
+      <li><div class="step-num">4</div><div class="step-txt">بعد الموافقة يُدمج الكود في main ✅</div></li>
+    </ul>
+    <div class="highlight-box"><strong>🌟 لماذا PR مهم؟</strong> يضمن أن الكود مراجَع من شخص آخر مما يقلّل الأخطاء ويحسّن جودة المشروع.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">🌐</div><div><div class="card-title">GitHub Pages</div><div class="card-subtitle">انشري موقعك مجاناً!</div></div></div>
+    <p>GitHub Pages يُتيح لك نشر موقع ويب <strong style="color:var(--pink-dark)">مجاناً تماماً</strong> مباشرة من مستودعك!</p>
+    <ul class="step-list">
+      <li><div class="step-num">1</div><div class="step-txt">ارفعي ملفات موقعك على GitHub</div></li>
+      <li><div class="step-num">2</div><div class="step-txt">اذهبي لـ Settings > Pages</div></li>
+      <li><div class="step-num">3</div><div class="step-txt">اختاري الفرع main كمصدر</div></li>
+      <li><div class="step-num">4</div><div class="step-txt">موقعك سيكون على: username.github.io/project 🎉</div></li>
+    </ul>
+    <div class="tip-box"><div class="tip-icon">🌟</div><div class="tip-text">GitHub Profile هو <strong>سيرتك الذاتية كمطوّرة</strong>! كل مشروع ترفعينه يُظهر مهاراتك للشركات.</div></div>
+  </div>
+
+</div>
+
+<!-- ===== APP BUILD ===== -->
+<div class="section" id="appbuild">
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">📱</div><div><div class="card-title">كيف يُبنى التطبيق؟</div><div class="card-subtitle">من الفكرة إلى المتجر</div></div></div>
+    <p>بناء التطبيق رحلة ممتعة تمر بمراحل واضحة. دعينا نفهم كل مرحلة!</p>
+    <div class="diagram">
+      <p style="font-weight:900;font-size:13px;margin-bottom:10px;">🏗️ مراحل بناء التطبيق</p>
+      <div class="diagram-row">
+        <div class="diagram-box pink">💡 الفكرة</div>
+        <div class="diagram-arrow">→</div>
+        <div class="diagram-box yellow">🎨 التصميم</div>
+        <div class="diagram-arrow">→</div>
+        <div class="diagram-box green">💻 البرمجة</div>
+      </div>
+      <div class="diagram-row">
+        <div class="diagram-box blue">🧪 الاختبار</div>
+        <div class="diagram-arrow">→</div>
+        <div class="diagram-box yellow">🚀 النشر</div>
+        <div class="diagram-arrow">→</div>
+        <div class="diagram-box pink">🔄 التحديث</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">💡</div><div><div class="card-title">المرحلة 1: الفكرة والتخطيط</div><div class="card-subtitle">قبل كتابة أي كود</div></div></div>
+    <ul class="step-list">
+      <li><div class="step-num">1</div><div class="step-txt"><strong>حدّدي المشكلة:</strong> ما الذي يحلّه تطبيقك؟ "أريد تطبيقاً لتتبّع مصاريفي اليومية"</div></li>
+      <li><div class="step-num">2</div><div class="step-txt"><strong>حدّدي جمهورك:</strong> من سيستخدم التطبيق؟ طلاب؟ ربّات بيوت؟ موظّفون؟</div></li>
+      <li><div class="step-num">3</div><div class="step-txt"><strong>قائمة المميزات:</strong> ابدئي بالأساسية فقط (MVP)</div></li>
+      <li><div class="step-num">4</div><div class="step-txt"><strong>اختاري المنصة:</strong> iOS؟ Android؟ ويب؟ أم الثلاثة؟</div></li>
+    </ul>
+    <div class="tip-box"><div class="tip-icon">⚠️</div><div class="tip-text">أكبر خطأ للمبتدئين: محاولة بناء تطبيق معقد جداً من البداية! ابدئي بأبسط نسخة تعمل.</div></div>
+    <div class="highlight-box"><strong>📌 ما هو MVP؟</strong><br>Minimum Viable Product = أبسط نسخة من التطبيق تحلّ المشكلة الأساسية. أطلقيها وخذي رأي المستخدمين، ثم طوّري بناءً على ذلك.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">🎨</div><div><div class="card-title">المرحلة 2: التصميم (UI/UX)</div><div class="card-subtitle">كيف يبدو ويشعر التطبيق</div></div></div>
+    <div class="highlight-box">
+      <strong>🎭 UI مقابل UX:</strong><br>
+      🖼️ <strong>UI (User Interface):</strong> شكل التطبيق — الألوان والأزرار والخطوط<br>
+      😊 <strong>UX (User Experience):</strong> تجربة الاستخدام — هل هو سهل ومريح؟
+    </div>
+    <ul class="step-list">
+      <li><div class="step-num">1</div><div class="step-txt"><strong>Wireframe:</strong> ارسمي الشاشات بالورقة والقلم أولاً</div></li>
+      <li><div class="step-num">2</div><div class="step-txt"><strong>Prototype:</strong> استخدمي Figma أو Adobe XD لتصميم رقمي تفاعلي</div></li>
+      <li><div class="step-num">3</div><div class="step-txt"><strong>Design System:</strong> حدّدي الألوان والخطوط الثابتة في التطبيق كله</div></li>
+    </ul>
+    <div class="diagram">
+      <p style="font-weight:700;font-size:13px;margin-bottom:10px;">🛠️ أدوات التصميم</p>
+      <div class="diagram-row">
+        <div class="diagram-box pink">Figma 🎨<br><small>الأشهر - مجاني</small></div>
+        <div class="diagram-box yellow">Adobe XD<br><small>احترافي</small></div>
+        <div class="diagram-box green">Canva<br><small>للمبتدئين</small></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">💻</div><div><div class="card-title">المرحلة 3: البرمجة</div><div class="card-subtitle">Frontend وBackend وDatabase</div></div></div>
+    <div class="highlight-box">
+      <strong>🏗️ طبقات التطبيق الثلاث:</strong><br>
+      🎨 <strong>Frontend:</strong> ما تراه المستخدِمة — شاشات وأزرار<br>
+      ⚙️ <strong>Backend:</strong> المنطق والخوادم خلف الكواليس<br>
+      🗄️ <strong>Database:</strong> أين تُخزَّن كل البيانات
+    </div>
+    <div class="diagram">
+      <p style="font-weight:700;font-size:13px;margin-bottom:10px;">📱 مثال: تطبيق توصيل طلبات</p>
+      <div class="diagram-row">
+        <div class="diagram-box pink">الشاشة 📱<br><small>Frontend</small></div>
+        <div class="diagram-arrow">↔️</div>
+        <div class="diagram-box yellow">الخادم ⚙️<br><small>Backend</small></div>
+        <div class="diagram-arrow">↔️</div>
+        <div class="diagram-box green">البيانات 🗄️<br><small>Database</small></div>
+      </div>
+    </div>
+    <table class="compare-table" style="margin-top:14px;">
+      <thead><tr><th>نوع التطبيق</th><th>اللغة المناسبة</th></tr></thead>
+      <tbody>
+        <tr><td>📱 تطبيق iPhone</td><td><span class="badge badge-pink">Swift</span> أو <span class="badge badge-yellow">Flutter</span></td></tr>
+        <tr><td>📱 تطبيق Android</td><td><span class="badge badge-pink">Kotlin</span> أو <span class="badge badge-yellow">Flutter</span></td></tr>
+        <tr><td>📱 iOS + Android معاً</td><td><span class="badge badge-green">Flutter / React Native</span></td></tr>
+        <tr><td>🌐 موقع ويب</td><td><span class="badge badge-pink">HTML + CSS + JavaScript</span></td></tr>
+        <tr><td>⚙️ Backend</td><td><span class="badge badge-yellow">Python / Node.js</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">🗄️</div><div><div class="card-title">قواعد البيانات</div><div class="card-subtitle">أين تُخزَّن بيانات التطبيق</div></div></div>
+    <p>قاعدة البيانات مثل <strong style="color:var(--pink-dark)">جداول Excel ضخمة جداً</strong> تخزّن كل بيانات التطبيق.</p>
+    <div class="diagram">
+      <div class="diagram-row">
+        <div class="diagram-box pink" style="min-width:130px;"><strong>SQL 📊</strong><br><small>جداول منظّمة<br>MySQL - PostgreSQL</small></div>
+        <div style="font-size:20px;margin:0 8px;color:var(--text-mid);">vs</div>
+        <div class="diagram-box yellow" style="min-width:130px;"><strong>NoSQL 📁</strong><br><small>مرن وسريع<br>MongoDB - Firebase</small></div>
+      </div>
+    </div>
+    <div class="tip-box"><div class="tip-icon">💡</div><div class="tip-text">للمبتدئين: <strong>Firebase</strong> من Google = قاعدة بيانات + خادم + مصادقة مستخدمين، كلها مجاناً في مكان واحد!</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">🧪</div><div><div class="card-title">المرحلة 4: الاختبار</div><div class="card-subtitle">تأكّدي أن كل شيء يعمل</div></div></div>
+    <ul class="step-list">
+      <li><div class="step-num">1</div><div class="step-txt"><strong>Unit Testing:</strong> اختبار كل وظيفة صغيرة بشكل مستقل</div></li>
+      <li><div class="step-num">2</div><div class="step-txt"><strong>Integration Testing:</strong> اختبار الأجزاء مع بعضها</div></li>
+      <li><div class="step-num">3</div><div class="step-txt"><strong>User Testing:</strong> اجعلي أشخاصاً حقيقيين يجرّبون ويعطوكِ رأيهم</div></li>
+      <li><div class="step-num">4</div><div class="step-txt"><strong>Bug Fix:</strong> أصلحي كل الأخطاء قبل النشر</div></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-icon">🚀</div><div><div class="card-title">المرحلة 5: النشر</div><div class="card-subtitle">أطلقي تطبيقك للعالم!</div></div></div>
+    <div class="diagram">
+      <div class="diagram-row">
+        <div class="diagram-box pink">تطبيق iOS 🍎<br><small>App Store</small></div>
+        <div class="diagram-box yellow">تطبيق Android 🤖<br><small>Google Play</small></div>
+        <div class="diagram-box green">موقع ويب 🌐<br><small>Vercel / Netlify</small></div>
+      </div>
+    </div>
+    <div class="highlight-box">
+      <strong>💰 رسوم النشر:</strong><br>
+      🍎 App Store: 99$ سنوياً<br>
+      🤖 Google Play: 25$ مرة واحدة فقط<br>
+      🌐 مواقع الويب: مجاناً على Vercel وNetlify وGitHub Pages!
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== ROADMAP ===== -->
+<div class="section" id="roadmap">
+  <div class="card" style="margin-bottom:18px;">
+    <div class="card-header"><div class="card-icon">🗺️</div><div><div class="card-title">خارطة طريقك كمبرمجة</div><div class="card-subtitle">من الصفر إلى الاحتراف</div></div></div>
+    <p>هذه الخارطة تأخذكِ من لا شيء إلى بناء تطبيقات حقيقية. كل مرحلة تُبنى على ما قبلها.</p>
+  </div>
+  <div class="roadmap">
+    <div class="roadmap-item"><div class="roadmap-dot">1</div><div class="roadmap-content"><div class="roadmap-title">🌱 أساسيات البرمجة — شهر إلى شهرين</div><div class="roadmap-desc">المتغيّرات، الشروط، الحلقات، الدوال. Python هي أفضل بداية على الإطلاق.</div><div class="roadmap-tags"><span class="badge badge-pink">Python</span><span class="badge badge-yellow">المنطق البرمجي</span><span class="badge badge-green">حل المشكلات</span></div></div></div>
+    <div class="roadmap-item"><div class="roadmap-dot">2</div><div class="roadmap-content"><div class="roadmap-title">🌐 تطوير الويب — شهران إلى ثلاثة</div><div class="roadmap-desc">HTML وCSS وJavaScript لبناء صفحات ويب. ستبنين مشاريعك الأولى الحقيقية!</div><div class="roadmap-tags"><span class="badge badge-yellow">HTML</span><span class="badge badge-pink">CSS</span><span class="badge badge-yellow">JavaScript</span></div></div></div>
+    <div class="roadmap-item"><div class="roadmap-dot">3</div><div class="roadmap-content"><div class="roadmap-title">🐙 Git وGitHub — أسبوعان</div><div class="roadmap-desc">تعلّمي حفظ مشاريعك والتعاون. GitHub هو مكان عرض أعمالك كـ Portfolio!</div><div class="roadmap-tags"><span class="badge badge-pink">Git</span><span class="badge badge-yellow">GitHub</span><span class="badge badge-green">Portfolio</span></div></div></div>
+    <div class="roadmap-item"><div class="roadmap-dot">4</div><div class="roadmap-content"><div class="roadmap-title">⚛️ إطار عمل — شهران إلى ثلاثة</div><div class="roadmap-desc">اختاري React للويب أو Flutter للجوال. هذه الأدوات تُسرّع البناء 10 أضعاف!</div><div class="roadmap-tags"><span class="badge badge-yellow">React</span><span class="badge badge-pink">Flutter</span><span class="badge badge-green">أو Vue.js</span></div></div></div>
+    <div class="roadmap-item"><div class="roadmap-dot">5</div><div class="roadmap-content"><div class="roadmap-title">⚙️ Backend وقواعد البيانات — شهران إلى ثلاثة</div><div class="roadmap-desc">تعلّمي كيف تبنين الخادم وتخزّنين البيانات. تطبيقك سيصبح كاملاً!</div><div class="roadmap-tags"><span class="badge badge-pink">Node.js</span><span class="badge badge-yellow">Firebase</span><span class="badge badge-green">SQL</span></div></div></div>
+    <div class="roadmap-item"><div class="roadmap-dot">🎉</div><div class="roadmap-content" style="background:linear-gradient(135deg,var(--pink-light),var(--yellow-light));border-color:var(--pink-dark);"><div class="roadmap-title">🚀 مشروع حقيقي والتوظيف!</div><div class="roadmap-desc">ابني مشروعاً كاملاً، انشريه على GitHub، وابدئي البحث عن عمل أو العمل الحرّ!</div><div class="roadmap-tags"><span class="badge badge-pink">مشروع تخرّج</span><span class="badge badge-yellow">فريلانس 💰</span><span class="badge badge-green">توظيف 🏢</span></div></div></div>
+  </div>
+  <div class="card" style="margin-top:4px;">
+    <div class="card-header"><div class="card-icon">⏱️</div><div><div class="card-title">كم تحتاجين من الوقت؟</div></div></div>
+    <div class="highlight-box">
+      <strong>⏰ جدول واقعي:</strong><br>
+      🌟 ساعة يومياً = 6 أشهر لتكوني جاهزة<br>
+      ⚡ ساعتان يومياً = 3 إلى 4 أشهر<br>
+      🔥 وقت كامل = شهران ونصف
+    </div>
+    <div class="tip-box"><div class="tip-icon">🎯</div><div class="tip-text">الاستمرارية أهم من الكمية. ساعة يومياً لا تفوتي أفضل من 8 ساعات ثم توقف أسبوعاً!</div></div>
+  </div>
+</div>
+
+<!-- ===== QUIZ ===== -->
+<div class="section" id="quiz">
+  <div id="quizContainer"></div>
+</div>
+
+<!-- ===== COMPARE ===== -->
+<div class="section" id="compare">
+  <div class="card">
+    <div class="card-header"><div class="card-icon">⚖️</div><div><div class="card-title">مقارنة لغات البرمجة</div></div></div>
+    <table class="compare-table">
+      <thead><tr><th>اللغة</th><th>تُستخدم في</th><th>للمبتدئ؟</th></tr></thead>
+      <tbody>
+        <tr><td>🐍 Python</td><td>AI، تحليل بيانات، أتمتة</td><td><span class="badge badge-green">ممتاز ✅</span></td></tr>
+        <tr><td>🌐 JavaScript</td><td>مواقع الويب</td><td><span class="badge badge-yellow">جيد 👍</span></td></tr>
+        <tr><td>☕ Java</td><td>Android، شركات</td><td><span class="badge badge-pink">صعب 😅</span></td></tr>
+        <tr><td>⚡ C++</td><td>ألعاب، أنظمة</td><td><span class="badge badge-pink">صعب جداً 🔥</span></td></tr>
+        <tr><td>🍎 Swift</td><td>تطبيقات iPhone</td><td><span class="badge badge-yellow">متوسط</span></td></tr>
+        <tr><td>🦋 Flutter</td><td>iOS + Android معاً</td><td><span class="badge badge-yellow">جيد 👍</span></td></tr>
+      </tbody>
+    </table>
+    <div class="highlight-box" style="margin-top:14px;"><strong>🎯 نصيحتي:</strong> Python أولاً، ثم JavaScript، ثم اختاري تخصّصك!</div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-icon">🌍</div><div><div class="card-title">خارطة عالم البرمجة</div></div></div>
+    <div class="diagram">
+      <div class="diagram-row">
+        <div class="diagram-box pink">📱 تطبيقات جوال<br><small>Flutter / Swift / Kotlin</small></div>
+        <div class="diagram-box yellow">🌐 مواقع ويب<br><small>HTML / JS / React</small></div>
+      </div>
+      <div class="diagram-row">
+        <div class="diagram-box green">🤖 ذكاء اصطناعي<br><small>Python</small></div>
+        <div class="diagram-box blue">🎮 ألعاب<br><small>C++ / Unity C#</small></div>
+        <div class="diagram-box pink">⚙️ خوادم<br><small>Python / Node.js</small></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== GLOSSARY ===== -->
+<div class="section" id="glossary">
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-header"><div class="card-icon">📖</div><div><div class="card-title">قاموس البرمجة الشامل</div><div class="card-subtitle">كل المصطلحات بأبسط شرح</div></div></div>
+  </div>
+  <div id="glossaryList"></div>
+</div>
+
+</div>
+
+<script>
+const lessons=[
+  {id:0,icon:"🌟",title:"ما هي البرمجة؟",subtitle:"الدرس الأول",content:`
+    <p>البرمجة هي <strong style="color:var(--pink-dark)">إعطاء تعليمات للحاسوب</strong> كي ينفّذ مهمة. الحاسوب لا يفكّر — يتّبع التعليمات فقط!</p>
+    <div class="diagram"><p style="font-weight:700;font-size:13px;margin-bottom:10px;">🍳 مثال: وصفة طبخ = برنامج</p>
+      <div class="diagram-row"><div class="diagram-box yellow">وصفة الطبخ<br><small>للإنسان</small></div><div class="diagram-arrow">↔️</div><div class="diagram-box pink">برنامج<br><small>للحاسوب</small></div></div>
+    </div>
+    <div class="highlight-box"><strong>🔑 المفهوم:</strong> البرنامج = خطوات مرتبة تُخبر الحاسوب بماذا يفعل بالضبط.</div>
+    <p>واتساب، يوتيوب، سناب شات — كلها كتبها بشر مثلكِ!</p>
+    <div class="tip-box"><div class="tip-icon">💡</div><div class="tip-text">لا تحتاجين عبقرية رياضيات! البرمجة تحتاج <strong>تفكيراً منطقياً</strong> أكثر من أي شيء.</div></div>`},
+  {id:1,icon:"🔤",title:"المتغيّرات",subtitle:"الدرس الثاني",content:`
+    <p>المتغيّر مثل <strong style="color:var(--pink-dark)">صندوق يخزّن معلومة</strong>. تعطيه اسماً وتضعين فيه قيمة.</p>
+    <div class="diagram"><div class="diagram-row"><div class="diagram-box pink">اسمي<br><small>اسم الصندوق</small></div><div class="diagram-arrow">←</div><div class="diagram-box yellow">"سارة"<br><small>المحتوى</small></div></div></div>
+    <div class="code-block"><span class="code-label">Python 🐍</span>
+اسمي = <span class="str">"سارة"</span>
+عمري = <span class="num">20</span>
+طالبة = <span class="kw">True</span>
+<span class="fn">print</span>(<span class="str">"مرحباً"</span>, اسمي)</div>
+    <div class="highlight-box"><strong>📌 أنواع المتغيّرات:</strong><br>🔤 <strong>String:</strong> نصوص "مرحبا"<br>🔢 <strong>Integer:</strong> أرقام صحيحة 5، 20<br>💯 <strong>Float:</strong> أرقام عشرية 3.14<br>✅ <strong>Boolean:</strong> True أو False</div>
+    <div class="tip-box"><div class="tip-icon">💡</div><div class="tip-text">اختاري أسماء واضحة! <code>عمر_المستخدم</code> أفضل من <code>x</code>.</div></div>`},
+  {id:2,icon:"🔀",title:"الشروط if/else",subtitle:"الدرس الثالث",content:`
+    <p>الشروط تُعطي الحاسوب القدرة على <strong style="color:var(--pink-dark)">اتخاذ قرارات</strong>.</p>
+    <div class="diagram"><div class="diagram-row"><div class="diagram-box">هل العمر ≥ 18؟</div></div>
+      <div class="diagram-row"><div class="diagram-box yellow">✅ نعم → اسمح</div><div style="margin:0 8px;color:var(--text-mid)">|</div><div class="diagram-box pink">❌ لا → ارفض</div></div>
+    </div>
+    <div class="code-block"><span class="code-label">Python 🐍</span>
+عمر = <span class="num">16</span>
+<span class="kw">if</span> عمر >= <span class="num">18</span>:
+    <span class="fn">print</span>(<span class="str">"أهلاً، يمكنك الدخول!"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="str">"صغيرة السن"</span>)</div>
+    <div class="highlight-box"><strong>الكلمات المفتاحية:</strong><br>🔵 <strong>if</strong> = إذا | 🟡 <strong>else</strong> = وإلا | 🟢 <strong>elif</strong> = أو إذا<br>المقارنات: <code>==</code> يساوي | <code>!=</code> لا يساوي | <code>&gt;</code> أكبر | <code>&lt;</code> أصغر</div>`},
+  {id:3,icon:"🔁",title:"الحلقات",subtitle:"الدرس الرابع",content:`
+    <p>الحلقات تُتيح <strong style="color:var(--pink-dark)">تكرار مهمة</strong> عدة مرات دون إعادة كتابة الكود.</p>
+    <div class="code-block"><span class="code-label">Python 🐍</span>
+<span class="cm"># for loop: عدد محدد من المرات</span>
+<span class="kw">for</span> رقم <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">6</span>):
+    <span class="fn">print</span>(<span class="str">"الرقم:"</span>, رقم)
+
+<span class="cm"># while loop: ما دام الشرط صحيحاً</span>
+عداد = <span class="num">0</span>
+<span class="kw">while</span> عداد < <span class="num">5</span>:
+    <span class="fn">print</span>(عداد)
+    عداد += <span class="num">1</span></div>
+    <div class="highlight-box"><strong>🔁 نوعان:</strong><br>📌 <strong>for:</strong> عدد محدد من التكرارات<br>📌 <strong>while:</strong> تكرار ما دام الشرط صحيحاً</div>
+    <div class="tip-box"><div class="tip-icon">⚠️</div><div class="tip-text">احذري من الحلقة اللانهائية! إذا لم يتوقف الشرط سيتجمّد البرنامج.</div></div>`},
+  {id:4,icon:"🛠️",title:"الدوال",subtitle:"الدرس الخامس",content:`
+    <p>الدالة مثل <strong style="color:var(--pink-dark)">وصفة جاهزة</strong> — تكتبينها مرة واحدة وتستخدمينها مرات لا تُحصى!</p>
+    <div class="diagram"><div class="diagram-row"><div class="diagram-box yellow">مدخلات</div><div class="diagram-arrow">→</div><div class="diagram-box pink">⚙️ الدالة</div><div class="diagram-arrow">→</div><div class="diagram-box green">مخرجات</div></div></div>
+    <div class="code-block"><span class="code-label">Python 🐍</span>
+<span class="kw">def</span> <span class="fn">رحّبي</span>(الاسم, العمر):
+    <span class="fn">print</span>(<span class="str">"أهلاً"</span>, الاسم)
+    <span class="fn">print</span>(<span class="str">"عمرك"</span>, العمر)
+
+<span class="fn">رحّبي</span>(<span class="str">"سارة"</span>, <span class="num">20</span>)
+<span class="fn">رحّبي</span>(<span class="str">"ليلى"</span>, <span class="num">25</span>)</div>
+    <div class="highlight-box"><strong>🌟 فوائد الدوال:</strong><br>♻️ إعادة الاستخدام | 📦 تنظيم الكود | 🐛 سهولة إصلاح الأخطاء</div>`},
+  {id:5,icon:"📦",title:"القوائم",subtitle:"الدرس السادس",content:`
+    <p>القائمة (List) تُخزّن <strong style="color:var(--pink-dark)">عدة قيم في متغيّر واحد</strong>، مثل قائمة تسوّق!</p>
+    <div class="diagram"><div class="diagram-row"><div class="diagram-box pink">[0]<br><small>تفاح</small></div><div class="diagram-box yellow">[1]<br><small>موز</small></div><div class="diagram-box pink">[2]<br><small>برتقال</small></div></div></div>
+    <div class="code-block"><span class="code-label">Python 🐍</span>
+فواكه = [<span class="str">"تفاح"</span>, <span class="str">"موز"</span>, <span class="str">"برتقال"</span>]
+<span class="fn">print</span>(فواكه[<span class="num">0</span>])  <span class="cm"># تفاح</span>
+فواكه.<span class="fn">append</span>(<span class="str">"مانجو"</span>)
+<span class="fn">print</span>(<span class="fn">len</span>(فواكه))  <span class="cm"># 4</span></div>
+    <div class="highlight-box"><strong>⚠️ مهم:</strong> الترقيم يبدأ من <strong>0</strong> وليس 1! أول عنصر هو [0]، الثاني [1].</div>`},
+  {id:6,icon:"🎛️",title:"البرمجة الكائنية",subtitle:"الدرس السابع",content:`
+    <p>OOP طريقة لتنظيم الكود بشكل يحاكي الواقع. كل شيء يمكن تمثيله كـ <strong style="color:var(--pink-dark)">"كائن"</strong> له خصائص وأفعال.</p>
+    <div class="diagram"><p style="font-weight:700;font-size:13px;margin-bottom:8px;">🚗 السيارة كـ كائن</p>
+      <div class="diagram-row"><div class="diagram-box pink">خصائص 📋<br><small>اللون، الماركة</small></div><div class="diagram-box yellow">أفعال ⚡<br><small>تشغيل، توقّف</small></div></div>
+    </div>
+    <div class="code-block"><span class="code-label">Python 🐍</span>
+<span class="kw">class</span> <span class="fn">سيارة</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, الماركة, اللون):
+        self.الماركة = الماركة
+        self.اللون = اللون
+    <span class="kw">def</span> <span class="fn">وصف</span>(self):
+        <span class="fn">print</span>(self.الماركة, self.اللون)
+
+سيارتي = <span class="fn">سيارة</span>(<span class="str">"تويوتا"</span>, <span class="str">"وردي"</span>)
+سيارتي.<span class="fn">وصف</span>()</div>
+    <div class="highlight-box"><strong>المصطلحات:</strong><br>🏗️ <strong>Class:</strong> قالب | 📦 <strong>Object:</strong> كائن | 📋 <strong>Attribute:</strong> خاصية | ⚡ <strong>Method:</strong> وظيفة</div>`}
+];
+
+const allQuestions=[
+  {q:"ما هي البرمجة بشكل مبسّط؟",opts:["لعبة فيديو","إعطاء تعليمات للحاسوب","برنامج رسم","نوع من الرياضيات"],ans:1,exp:"✅ البرمجة = تعليمات للحاسوب، مثل وصفة الطبخ للطاهي!"},
+  {q:"المتغيّر في البرمجة يشبه...",opts:["خطأ في الكود","نافذة في الحاسوب","صندوق يخزّن معلومة","لغة برمجة"],ans:2,exp:"✅ المتغيّر = صندوق له اسم يخزّن قيمة."},
+  {q:"ما الكلمة المفتاحية للشرط في Python؟",opts:["when","if","check","condition"],ans:1,exp:"✅ في Python نكتب 'if' ثم الشرط ثم نقطتين."},
+  {q:"الحلقة (Loop) تُستخدم لـ...",opts:["تخزين البيانات","تكرار مهمة عدة مرات","إنشاء متغيّر","فتح برنامج"],ans:1,exp:"✅ الحلقة تُكرّر الكود عدة مرات دون إعادة كتابته."},
+  {q:"أي لغة برمجة مناسبة للمبتدئين؟",opts:["Assembly","C++","Python","Machine Code"],ans:2,exp:"✅ Python أسهل لغة للمبتدئين بقواعدها البسيطة."},
+  {q:"ما هو GitHub؟",opts:["لغة برمجة","موقع لحفظ ومشاركة الكود","برنامج تصميم","محرّك بحث"],ans:1,exp:"✅ GitHub موقع يُخزّن الكود ويُتيح التعاون بين المطوّرين."},
+  {q:"ما الفرق بين Git وGitHub؟",opts:["لا فرق","Git برنامج والGitHub موقع","GitHub برنامج والGit موقع","كلاهما لغات برمجة"],ans:1,exp:"✅ Git أداة تتبّع التغييرات، GitHub موقع يستضيف المشاريع."},
+  {q:"ما هو الـ Commit في Git؟",opts:["حذف الكود","إرسال بريد","حفظ نقطة تغيير في المشروع","فتح ملف"],ans:2,exp:"✅ Commit = حفظ نقطة في تاريخ المشروع، مثل نقطة الحفظ في الألعاب!"},
+  {q:"ما هو الـ Frontend؟",opts:["قاعدة البيانات","الخادم","الواجهة التي يراها المستخدم","لغة البرمجة"],ans:2,exp:"✅ Frontend = الشاشات والأزرار التي يتعامل معها المستخدم."},
+  {q:"ما الفرق بين UI وUX؟",opts:["لا فرق","UI الشكل، UX التجربة","UX الشكل، UI التجربة","كلاهما نفس الشيء"],ans:1,exp:"✅ UI = شكل التصميم، UX = سهولة وراحة الاستخدام."},
+  {q:"ما هو MVP في بناء التطبيقات؟",opts:["أغلى إصدار","المطوّر الأفضل","الحد الأدنى من المميزات للإطلاق","نوع من قواعد البيانات"],ans:2,exp:"✅ MVP = أبسط نسخة تعمل للحصول على رأي المستخدمين."},
+  {q:"ما الترقيم الصحيح للعنصر الأول في قائمة Python؟",opts:["[1]","[0]","[first]","[-1]"],ans:1,exp:"✅ الترقيم في Python يبدأ من 0، فأول عنصر هو [0]."},
+  {q:"ما هو Backend؟",opts:["واجهة المستخدم","الخادم وقاعدة البيانات خلف الكواليس","تصميم الشاشات","لغة البرمجة فقط"],ans:1,exp:"✅ Backend = الجزء الخفي الذي يعالج البيانات والمنطق."},
+  {q:"ما هو Pull Request في GitHub؟",opts:["تحميل الكود","طلب مراجعة الكود قبل دمجه","حذف فرع","إنشاء حساب"],ans:1,exp:"✅ Pull Request = طلب مراجعة الكود من الفريق قبل إضافته للمشروع."},
+  {q:"ما هو الـ Branch في Git؟",opts:["خطأ في الكود","نسخة موازية للمشروع","أمر لحذف الملفات","نوع من المتغيّرات"],ans:1,exp:"✅ Branch = نسخة موازية للمشروع تجرّبين فيها التعديلات بأمان."},
+];
+
+const glossaryItems=[
+  {icon:"🔤",term:"Algorithm (خوارزمية)",def:"خطوات مرتبة لحل مشكلة. مثل وصفة الطبخ — كل خطوة لها ترتيبها الصحيح."},
+  {icon:"🐛",term:"Bug (خطأ برمجي)",def:"خطأ في الكود يجعل البرنامج يعمل بشكل خاطئ. اسمه من حشرة وجدتها مبرمجة في جهاز قديم!"},
+  {icon:"🔍",term:"Debugging (تصحيح الأخطاء)",def:"البحث عن الأخطاء في الكود وإصلاحها. أهم مهارة يحتاجها أي مبرمج."},
+  {icon:"📚",term:"Library (مكتبة)",def:"كود جاهز تُضيفينه لبرنامجك. تستخدمينه دون كتابته من الصفر."},
+  {icon:"🏗️",term:"Framework (إطار عمل)",def:"هيكل جاهز يُسرّع بناء التطبيقات. مثل React وFlutter وDjango."},
+  {icon:"🌐",term:"API",def:"واجهة تُتيح للبرامج التواصل ببعض. تطبيق الطقس يأخذ البيانات من موقع الأرصاد عبر API."},
+  {icon:"☁️",term:"Cloud (السحابة)",def:"تخزين البيانات على خوادم بعيدة. مثل Google Drive وiCloud وAWS."},
+  {icon:"🔒",term:"Encryption (تشفير)",def:"تحويل البيانات لصيغة غير مقروءة لحمايتها. واتساب يشفّر محادثاتك."},
+  {icon:"🗄️",term:"Database (قاعدة بيانات)",def:"مكان تخزين بيانات التطبيق بشكل منظّم. مثل جداول Excel ضخمة جداً."},
+  {icon:"🔄",term:"Version Control",def:"تتبّع كل تغيير في الكود عبر الزمن. Git هو أشهر أداة لذلك."},
+  {icon:"🌿",term:"Branch (فرع)",def:"نسخة موازية للمشروع تجرّبين فيها تعديلات دون المساس بالنسخة الأصلية."},
+  {icon:"🚀",term:"Deploy (نشر)",def:"رفع التطبيق على الإنترنت أو المتاجر ليستخدمه الناس."},
+  {icon:"⚙️",term:"Backend",def:"الجزء الخفي من التطبيق — الخوادم وقواعد البيانات والمنطق خلف الكواليس."},
+  {icon:"🎨",term:"Frontend",def:"الجزء المرئي من التطبيق — الشاشات والأزرار والتصميم."},
+  {icon:"📱",term:"UI / UX",def:"UI = شكل الواجهة. UX = تجربة الاستخدام وسهولتها وراحتها."},
+  {icon:"🧪",term:"Testing (اختبار)",def:"التأكّد من أن الكود يعمل بشكل صحيح قبل نشره للمستخدمين."},
+  {icon:"🐙",term:"GitHub",def:"موقع يُتيح حفظ الكود ومشاركته والتعاون. مثل Google Drive للكود."},
+  {icon:"📸",term:"Commit",def:"حفظ نقطة تغيير في المشروع. مثل نقطة الحفظ في ألعاب الفيديو!"},
+  {icon:"🔄",term:"Pull Request (PR)",def:"طلب مراجعة الكود من الفريق قبل إضافته للمشروع الرئيسي."},
+  {icon:"📦",term:"Repository (Repo)",def:"مجلد المشروع على GitHub. يحتوي كل ملفاتك وتاريخ التغييرات."},
+];
+
+let score=0, currentLesson=0;
+let completedLessons=new Set();
+let quizState={current:0,answered:0,correct:0,shown:false};
+let shuffledQuiz=[...allQuestions].sort(()=>Math.random()-0.5).slice(0,12);
+
+function init(){
+  createBubbles(); renderLessonNav(); showLesson(0); renderGlossary(); renderQuiz();
+}
+
+function createBubbles(){
+  const c=document.getElementById('bubbles');
+  const cols=['#f8bbd0','#ffeb3b','#fce4ec','#fff176','#f48fb1'];
+  for(let i=0;i<16;i++){
+    const b=document.createElement('div'); b.className='bubble';
+    const s=18+Math.random()*55;
+    b.style.cssText=`width:${s}px;height:${s}px;background:${cols[Math.floor(Math.random()*cols.length)]};left:${Math.random()*100}%;animation-duration:${8+Math.random()*12}s;animation-delay:${Math.random()*8}s;`;
+    c.appendChild(b);
+  }
+}
+
+function renderLessonNav(){
+  document.getElementById('lessonNav').innerHTML=lessons.map((l,i)=>`
+    <button class="lesson-btn ${i===currentLesson?'active':''} ${completedLessons.has(i)?'done':''}" onclick="showLesson(${i})">
+      ${completedLessons.has(i)?'✅':l.icon} ${l.title}
+    </button>`).join('');
+}
+
+function showLesson(idx){
+  currentLesson=idx; const l=lessons[idx];
+  document.getElementById('lessonContent').innerHTML=`
+    <div class="card">
+      <div class="card-header"><div class="card-icon">${l.icon}</div><div><div class="card-title">${l.title}</div><div class="card-subtitle">${l.subtitle}</div></div></div>
+      ${l.content}
+      <div style="margin-top:16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+        ${idx>0?`<button class="btn btn-secondary btn-sm" onclick="showLesson(${idx-1})">⬅️ السابق</button>`:''}
+        <button class="btn btn-primary btn-sm" onclick="completeLesson(${idx})">${completedLessons.has(idx)?'✅ مكتمل':'🎯 أكملت الدرس!'}</button>
+        ${idx<lessons.length-1?`<button class="btn btn-secondary btn-sm" onclick="showLesson(${idx+1})">التالي ➡️</button>`:''}
+      </div>
+    </div>`;
+  renderLessonNav();
+}
+
+function completeLesson(idx){
+  if(!completedLessons.has(idx)){completedLessons.add(idx);addScore(50);spawnConfetti();updateProgress();}
+  showLesson(idx);
+}
+
+function updateProgress(){
+  const pct=Math.round((completedLessons.size/lessons.length)*100);
+  document.getElementById('progressBar').style.width=pct+'%';
+  document.getElementById('progressLabel').textContent=
+    pct===100?'🎉 أكملتِ جميع الدروس! أنتِ نجمة! ⭐':
+    `${completedLessons.size} من ${lessons.length} دروس مكتملة (${pct}%)`;
+}
+
+function renderQuiz(){
+  const c=document.getElementById('quizContainer');
+  if(quizState.shown){showResult(c);return;}
+  const q=shuffledQuiz[quizState.current];
+  const letters=['أ','ب','ج','د'];
+  c.innerHTML=`
+    <div class="quiz-card">
+      <div class="quiz-q-num">سؤال ${quizState.current+1} من ${shuffledQuiz.length}</div>
+      <div class="quiz-question">${q.q}</div>
+      <div class="quiz-options">${q.opts.map((o,i)=>`<button class="quiz-option" onclick="answerQ(${i})" id="opt${i}"><span class="option-dot">${letters[i]}</span>${o}</button>`).join('')}</div>
+      <div class="feedback" id="fb"></div>
+      <div class="quiz-nav" id="qnav" style="display:none;"><button class="btn btn-primary" onclick="nextQ()">${quizState.current<shuffledQuiz.length-1?'التالي ➡️':'🏆 النتيجة'}</button></div>
+    </div>
+    <div style="text-align:center;margin-top:10px;color:var(--text-mid);font-size:13px;font-weight:600;">✅ صحيح: ${quizState.correct} | 📝 تم: ${quizState.answered}</div>`;
+}
+
+function answerQ(chosen){
+  const q=shuffledQuiz[quizState.current];
+  document.querySelectorAll('.quiz-option').forEach(o=>o.classList.add('selected'));
+  document.getElementById('opt'+q.ans).classList.add('correct');
+  if(chosen!==q.ans) document.getElementById('opt'+chosen).classList.add('wrong');
+  const fb=document.getElementById('fb');
+  fb.className='feedback show '+(chosen===q.ans?'ok':'no');
+  fb.textContent=q.exp;
+  quizState.answered++;
+  if(chosen===q.ans){quizState.correct++;addScore(20);}
+  document.getElementById('qnav').style.display='flex';
+}
+
+function nextQ(){
+  quizState.current++;
+  if(quizState.current>=shuffledQuiz.length) quizState.shown=true;
+  renderQuiz();
+}
+
+function showResult(c){
+  const pct=Math.round((quizState.correct/shuffledQuiz.length)*100);
+  const emoji=pct>=80?'🎉':pct>=60?'😊':'💪';
+  const msg=pct>=80?'ممتاز! أنتِ نجمة البرمجة!':pct>=60?'جيد جداً! استمري!':'تدرّبي أكثر وستتقنيها!';
+  const stars=pct>=80?'⭐⭐⭐':pct>=60?'⭐⭐':'⭐';
+  if(pct>=80) spawnConfetti();
+  c.innerHTML=`<div class="result-card"><span class="result-emoji">${emoji}</span>
+    <div class="result-score">${quizState.correct}/${shuffledQuiz.length}</div>
+    <div class="stars">${stars}</div><div class="result-msg">${msg}</div>
+    <div style="font-size:13px;color:var(--text-mid);margin-bottom:16px;">نسبة النجاح: ${pct}%</div>
+    <button class="btn btn-primary" onclick="restartQuiz()">🔄 ابدئي من جديد</button></div>`;
+}
+
+function restartQuiz(){
+  quizState={current:0,answered:0,correct:0,shown:false};
+  shuffledQuiz=[...allQuestions].sort(()=>Math.random()-0.5).slice(0,12);
+  renderQuiz();
+}
+
+function renderGlossary(){
+  document.getElementById('glossaryList').innerHTML=glossaryItems.map((g,i)=>`
+    <div class="glossary-item" style="animation:fadeIn 0.4s ease ${i*0.04}s both;">
+      <div class="glossary-icon">${g.icon}</div>
+      <div><div class="glossary-term">${g.term}</div><div class="glossary-def">${g.def}</div></div>
+    </div>`).join('');
+}
+
+function showSection(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function addScore(pts){
+  score+=pts;
+  document.getElementById('scoreDisplay').textContent=`⭐ ${score} نقطة`;
+}
+
+function spawnConfetti(){
+  const cols=['#f48fb1','#ffeb3b','#f8bbd0','#fff176','#e91e8c','#ffc107'];
+  for(let i=0;i<40;i++){
+    const c=document.createElement('div'); c.className='confetti-piece';
+    c.style.cssText=`left:${Math.random()*100}vw;top:${-10+Math.random()*-30}px;background:${cols[Math.floor(Math.random()*cols.length)]};animation-delay:${Math.random()*0.5}s;width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;border-radius:${Math.random()>0.5?'50%':'2px'};`;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),2500);
+  }
+}
+
+init();
+</script>
+</body>
+</html>
